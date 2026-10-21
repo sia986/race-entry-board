@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>레이스 접수 보드</title>
+<meta name="description" content="국내 메이저 마라톤·트레일 대회의 다음 접수 시기, 신청 링크, 방식, 마감 속도를 한곳에. 빠른 신청 키트와 접수 당일 플레이북 포함.">
+<meta property="og:title" content="레이스 접수 보드">
+<meta property="og:description" content="마라톤·트레일 접수 시기와 신청 링크, 마감 속도, 빠른 신청 키트">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#ececea">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M6 14a5 5 0 0 1 5-5h14l6 6h22a5 5 0 0 1 5 5v4H6z' fill='%232f8fe0'/%3E%3Crect x='6' y='20' width='52' height='35' rx='5' fill='%2363c4f5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: graph-paper moodboard → scattered hero labels around a folder → system-UI widgets (search, context menu, notifications, windows, player, chat) → fixed bottom toolbar */
+:root{
+  --paper:#ececea; --grid:#d6d6d3; --ink:#111214; --sub:#6b6d72; --hair:#e3e3e6;
+  --card:#ffffff; --card-2:#f4f4f6; --blue:#1f7ae0; --blue-ink:#0b5fc0; --sky:#63c4f5; --folder:#2f8fe0;
+  --pill:#9c9c9e; --green:#34c759; --red:#e5484d; --menu:#0d0d0f;
+  --f-lat:"Inter Tight",-apple-system,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
+  --f-kr:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --shadow:0 1px 0 rgba(0,0,0,.04),0 8px 24px -12px rgba(0,0,0,.22);
+  --cell:104px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background-color:var(--paper);color:var(--ink);font-family:var(--f-lat),var(--f-kr);font-size:15px;line-height:1.55;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:var(--cell) var(--cell);background-position:-1px -1px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:20px;padding-block:24px 140px;display:grid;gap:72px}
+h1,h2,h3{margin:0;text-wrap:balance}
+a{color:var(--blue-ink)}
+.kr{font-family:var(--f-kr)}
+.tight{letter-spacing:-.045em}
+.u{display:inline-block;border-bottom:1.5px solid var(--blue);padding-bottom:1px}
+.s{text-decoration:line-through;text-decoration-color:var(--blue);text-decoration-thickness:1.5px;color:var(--sub)}
+.muted{color:var(--sub)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px}
+
+/* ---------- Hero moodboard ---------- */
+.hero{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:18px 12px;align-items:center;padding-block:72px 24px}
+.lbl{font-weight:600;font-size:19px;line-height:1.1}
+.lbl small{display:block;font-weight:400;font-size:12.5px;line-height:1.35;color:var(--sub);margin-top:6px;letter-spacing:0}
+.h-a{grid-column:2/4;grid-row:1}
+.h-b{grid-column:4/6;grid-row:1;justify-self:end;text-align:left}
+.h-c{grid-column:1/3;grid-row:2}
+.h-d{grid-column:5/7;grid-row:2;justify-self:end}
+.h-title{grid-column:1/5;grid-row:1;align-self:center}
+.h-title .eyb{font-size:26px;font-weight:600;letter-spacing:-.04em;line-height:1}
+.h-title h1{font-size:clamp(52px,9.5vw,104px);font-weight:800;letter-spacing:-.065em;line-height:.88;margin-top:6px}
+.h-title h1 .kr{letter-spacing:-.06em}
+.h-folder{grid-column:5/6;grid-row:1;justify-self:center;align-self:start}
+.h-card{grid-column:5/7;grid-row:1;justify-self:end;align-self:end;margin-top:120px}
+.h-e{grid-column:1/3;grid-row:4}
+.h-f{grid-column:3/5;grid-row:4}
+.h-g{grid-column:2/4;grid-row:5}
+.h-h{grid-column:4/6;grid-row:5}
+
+.folder{width:150px;height:118px;position:relative;filter:drop-shadow(0 10px 14px rgba(20,90,170,.25))}
+.folder::before{content:"";position:absolute;left:0;top:0;width:58%;height:30px;background:var(--folder);border-radius:12px 12px 0 0;clip-path:polygon(0 0,78% 0,100% 100%,0 100%)}
+.folder::after{content:"";position:absolute;left:0;top:16px;right:0;height:100%;background:var(--folder);border-radius:10px}
+.folder i{position:absolute;left:0;right:0;bottom:-16px;height:92px;background:linear-gradient(180deg,#7fd3fb,var(--sky));border-radius:10px;z-index:1;box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
+.folder i::after{content:"";position:absolute;left:10px;right:10px;bottom:16px;height:1px;background:rgba(255,255,255,.55)}
+
+.mini{background:var(--card);border:1px solid var(--hair);box-shadow:var(--shadow);border-radius:6px;padding:10px 12px;width:230px;font-size:12px;display:grid;gap:8px}
+.mini .who{display:flex;align-items:center;gap:8px}
+.mini .av{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#7fd3fb,#1f7ae0)}
+.mini b{font-size:13px}
+.event{display:flex;gap:10px;align-items:center;border:1.5px solid var(--blue);border-radius:3px;padding:6px 8px}
+.cal{width:38px;flex:none;border:1px solid var(--hair);border-radius:3px;text-align:center;overflow:hidden;background:#fff}
+.cal .m{display:block;background:var(--menu);color:#fff;font-size:9.5px;font-weight:600;letter-spacing:.02em;line-height:15px}
+.cal .d{display:block;font-size:16px;font-weight:700;line-height:24px;font-variant-numeric:tabular-nums}
+.chip{display:inline-block;font-size:10px;font-weight:600;background:var(--card-2);border-radius:3px;padding:0 5px;color:var(--sub)}
+
+/* ---------- Section headers ---------- */
+.sec{display:grid;gap:22px;scroll-margin-top:24px}
+.sec-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
+.sec-h h2{font-size:clamp(34px,5vw,48px);font-weight:700;letter-spacing:-.055em;line-height:1}
+.sec-h p{margin:0;font-size:13.5px;color:var(--sub);max-width:52ch}
+
+/* ---------- Search + context menu ---------- */
+.tools{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.search{flex:1 1 280px;display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #4a4a4f;border-radius:999px;padding:9px 18px;max-width:420px}
+.search svg{flex:none}
+.search input{border:0;outline:0;background:transparent;font:inherit;font-size:15px;width:100%;min-width:0;color:var(--ink)}
+.search:focus-within{box-shadow:0 0 0 3px rgba(31,122,224,.22)}
+.menu{position:relative;display:inline-flex;background:var(--menu);border-radius:8px;padding:0;box-shadow:var(--shadow)}
+.menu::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-7px;border:7px solid transparent;border-bottom:0;border-top-color:var(--menu)}
+.menu button{background:transparent;border:0;color:#fff;font-size:14.5px;padding:9px 16px;cursor:pointer;border-left:1px solid #3a3a3f;white-space:nowrap}
+.menu button:first-child{border-left:0;border-radius:8px 0 0 8px}
+.menu button:last-child{border-radius:0 8px 8px 0}
+.menu button[aria-pressed="true"]{background:#3a3a40}
+.count{font-size:13px;color:var(--sub)}
+
+/* ---------- Notifications (next up) ---------- */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.note{background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;min-width:0}
+.note .bar{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:11.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;background:#fff}
+.note .app{width:18px;height:18px;border-radius:5px;background:var(--green);display:grid;place-items:center;color:#fff;font-size:11px}
+.note.soon .app{background:var(--red)}
+.note .bar span:last-child{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:500;color:var(--sub)}
+.note .body{padding:10px 12px 13px;background:var(--card-2);display:grid;gap:2px}
+.note .body b{font-size:14.5px;letter-spacing:-.01em}
+.note .body span{font-size:13px;color:var(--sub)}
+.note .body .dd{font-weight:800;font-size:28px;letter-spacing:-.05em;line-height:1.1;color:var(--ink)}
+.note.soon .body .dd{color:var(--red)}
+
+/* ---------- Race windows ---------- */
+.races{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.win{background:var(--card);border-radius:8px;box-shadow:var(--shadow);border:1px solid var(--hair);display:grid;grid-template-rows:auto auto 1fr auto;min-width:0;overflow:hidden}
+.win .tb{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--hair);font-size:12px;font-weight:600}
+.win .tb .kind{display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.win.trail .dot{background:var(--green)}
+.win .tb .x{color:var(--sub);font-weight:400}
+.win .head{display:flex;gap:12px;align-items:flex-start;padding:14px 14px 4px}
+.win h3{font-size:17px;font-weight:700;letter-spacing:-.02em;line-height:1.3}
+.win .when{font-size:13px;color:var(--sub);margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.state{font-size:10.5px;font-weight:600;border-radius:3px;padding:1px 6px;background:var(--card-2);color:var(--sub)}
+.state.fixed{background:#e3f4e8;color:#1c7c3a}
+.win dl{align-content:start;margin:0;padding:10px 14px 14px;display:grid;gap:9px;font-size:13.5px}
+.win dl div{display:grid;grid-template-columns:62px 1fr;gap:10px;padding-top:9px;border-top:1px solid var(--hair)}
+.win dl div:first-child{border-top:0;padding-top:0}
+.win dt{color:var(--sub);font-size:12px;padding-top:1px}
+.win dd{margin:0;min-width:0}
+.speed{color:var(--red);font-weight:600}
+.win .acts{display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 14px 13px;border-top:1px solid var(--hair);background:var(--card-2)}
+.win .acts a{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--blue-ink)}
+.win .acts a:hover{text-decoration:underline}
+.win.mine{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),var(--shadow)}
+.win .tb .x button{border:0;background:transparent;cursor:pointer;color:var(--sub);font-size:15px;line-height:1;padding:0 0 0 8px}
+.win .tb .x button:hover{color:var(--red)}
+.star{border:0;background:transparent;cursor:pointer;font-size:15px;line-height:1;color:#b9b9be;padding:0 6px 0 0}
+.star[aria-pressed="true"]{color:#f5a623}
+.mytag{font-size:10px;font-weight:700;background:var(--blue);color:#fff;border-radius:3px;padding:1px 5px;margin-left:4px}
+.addbtn{border:1.5px dashed #8a8a90;background:rgba(255,255,255,.6);border-radius:999px;padding:9px 18px;cursor:pointer;font-size:14px;font-weight:600}
+.addbtn:hover{background:#fff}
+.addform{background:#fff;border-radius:8px;box-shadow:var(--shadow);border:1px solid var(--hair);overflow:hidden}
+.addform .tb{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;font-size:13px;font-weight:600;border-bottom:1px solid var(--hair)}
+.addform .tb button{border:0;background:transparent;cursor:pointer;font-size:16px;color:var(--sub)}
+.addform select,.addform textarea{flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:14px;padding:6px 0;background:transparent;color:var(--ink)}
+.addform textarea{resize:vertical;min-height:38px}
+.addform .foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;padding:12px 16px;font-size:12.5px;color:var(--sub)}
+.addform .send{border:0;background:transparent;color:var(--blue-ink);font-weight:800;letter-spacing:.05em;cursor:pointer;font-size:13px}
+.err-msg{color:var(--red);font-weight:600}
+.cd{flex:none;text-align:right;display:grid;gap:0;align-content:start;min-width:64px}
+.cd span{font-size:10.5px;color:var(--sub);font-weight:600;letter-spacing:.02em}
+.cd b{font-size:26px;font-weight:800;letter-spacing:-.05em;line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cd.soon b{color:var(--red)}
+.cd.live b{color:#1c7c3a;font-size:20px}
+.cd.live span:first-child{color:#1c7c3a}
+.cd.over b,.cd.tba b{color:var(--sub)}
+.years{display:grid;gap:18px;min-width:0}
+.years>*{min-width:0}
+.sec{min-width:0}
+.yr{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;border-bottom:1.5px solid var(--ink);padding-bottom:8px;margin-top:18px}
+.yr h3{font-size:30px;font-weight:800;letter-spacing:-.05em;line-height:1}
+.yr h3 .kr{font-size:18px;letter-spacing:-.03em;margin-left:4px}
+.yr span{font-size:13px}
+.closed{min-width:0;max-width:100%;overflow:hidden;background:#fff;border:1px solid var(--hair);border-radius:8px;box-shadow:var(--shadow)}
+.closed summary{cursor:pointer;padding:12px 16px;font-weight:600;font-size:14px}
+.ctbl{overflow-x:auto;border-top:1px solid var(--hair)}
+.ctbl table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+.ctbl th,.ctbl td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--hair);vertical-align:top}
+.ctbl th{font-size:11.5px;color:var(--sub);font-weight:600}
+.ctbl td:first-child{font-weight:600}
+.ctbl td a{font-size:11.5px;font-weight:700;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
+.empty{padding:28px;text-align:center;color:var(--sub);background:#fff;border-radius:8px}
+
+/* ---------- Compose window (kit) ---------- */
+.compose{background:#fff;border-radius:8px;box-shadow:var(--shadow);border:1px solid var(--hair);overflow:hidden}
+.compose .tb{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;font-size:13px;font-weight:600;border-bottom:1px solid var(--hair)}
+.compose .tb button{border:0;background:transparent;cursor:pointer;color:var(--sub);font-size:13px}
+.lines{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.line{display:flex;align-items:center;gap:10px;padding:8px 16px;border-bottom:1px solid var(--hair);min-width:0}
+.line label{flex:none;width:118px;font-size:12.5px;color:var(--sub)}
+.line label em{display:block;font-style:normal;font-size:10.5px;color:var(--blue-ink)}
+.line input{flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:14px;padding:6px 0;background:transparent;color:var(--ink)}
+.line button{flex:none;border:0;background:transparent;color:var(--blue-ink);font-size:11.5px;font-weight:700;letter-spacing:.04em;cursor:pointer;padding:6px 2px}
+.line button.ok{color:#1c7c3a}
+.masked .line input{-webkit-text-security:disc}
+.compose .foot{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding:12px 16px;font-size:12.5px;color:var(--sub)}
+.compose .foot .ic{display:flex;gap:16px;color:var(--ink);font-weight:600}
+.compose .foot .send{color:var(--blue-ink);font-weight:700;letter-spacing:.04em}
+
+/* ---------- Pills (accounts) ---------- */
+.pills{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.pill{display:flex;align-items:center;gap:14px;background:var(--pill);color:#fff;border-radius:999px;padding:11px 22px;cursor:pointer;border:0;text-align:left;transition:background .15s}
+.pill .ico{width:22px;height:22px;flex:none;display:grid;place-items:center}
+.pill b{display:block;font-size:14.5px;font-weight:600;line-height:1.25}
+.pill span span{display:block;font-size:11.5px;opacity:.85}
+.pill[aria-pressed="true"]{background:var(--blue)}
+
+
+/* ---------- Chat (errors) ---------- */
+.chat{display:grid;gap:14px;max-width:720px}
+.pair{display:grid;gap:6px}
+.bub{max-width:min(86%,520px);padding:10px 15px;border-radius:20px;font-size:14px;position:relative;line-height:1.45}
+.bub.err{justify-self:end;background:var(--blue);color:#fff;border-bottom-right-radius:6px}
+.bub.fix{justify-self:start;background:#fff;color:var(--ink);border-bottom-left-radius:6px;box-shadow:var(--shadow)}
+.bub.fix small{display:block;color:var(--sub);font-size:12px;margin-bottom:2px}
+
+/* ---------- Rules / sources ---------- */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.rule{background:#fff;border-radius:8px;border:1px solid var(--hair);box-shadow:var(--shadow);padding:16px 18px}
+.rule h3{font-size:15px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.rule ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:13.5px}
+.src{columns:2 300px;column-gap:28px;font-size:12.5px}
+.src a{color:var(--sub);text-decoration:none;display:block;padding:3px 0;break-inside:avoid}
+.src a:hover{color:var(--blue-ink)}
+.foot-note{font-size:12.5px;color:var(--sub);text-align:center}
+
+/* ---------- Bottom toolbar ---------- */
+.dock{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:10;display:flex;gap:2px;background:rgba(250,250,251,.92);backdrop-filter:blur(10px);border:1px solid var(--hair);border-radius:12px;box-shadow:0 10px 30px -10px rgba(0,0,0,.3);padding:6px 8px;max-width:calc(100% - 24px)}
+.dock a{display:grid;justify-items:center;gap:1px;text-decoration:none;color:var(--ink);font-size:10px;padding:5px 10px;border-radius:8px;min-width:48px}
+.dock a:hover{background:#ececee}
+.dock svg{width:20px;height:20px}
+
+@media (max-width:760px){
+  .hero{grid-template-columns:repeat(2,1fr);padding-block:24px 8px}
+  .h-card{margin-top:0}
+  .h-a,.h-b,.h-c,.h-d,.h-e,.h-f,.h-g,.h-h{grid-column:auto;grid-row:auto;justify-self:start}
+  .h-title{grid-column:1/-1;grid-row:1}
+  .h-folder{grid-column:1/2;grid-row:2;justify-self:start}
+  .h-card{grid-column:1/-1;grid-row:auto;justify-self:start}
+  .folder{width:112px;height:88px}.folder i{height:70px}
+  .dock a span{display:none}.dock a{min-width:40px;padding:7px 9px}
+  .line label{width:96px}
+  .menu button{padding:9px 11px;font-size:13.5px}
+  .search{max-width:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HERO -->
+<header class="hero" aria-label="소개">
+  <div class="h-title">
+    <div class="eyb">2026–27 season</div>
+    <h1>race entry<br><span class="kr">접수 보드</span></h1>
+  </div>
+  <div class="h-folder" aria-hidden="true"><div class="folder"><i></i></div></div>
+  <div class="h-card"><div class="mini" id="heroCard"></div></div>
+</header>
+
+<!-- NEXT UP -->
+<section class="sec" id="next" aria-labelledby="h-next">
+  <div class="sec-h"><h2 id="h-next">next up</h2><p class="kr">오늘 기준 가장 가까운 접수 네 개예요. 7일 안으로 다가오면 빨간 알림으로 바뀌어요.</p></div>
+  <div class="notes" id="notes"></div>
+</section>
+
+<!-- RACES -->
+<section class="sec" id="races" aria-labelledby="h-races">
+  <div class="sec-h"><h2 id="h-races">races</h2><p class="kr">대회명으로 찾거나 종류로 걸러 보세요. ☆을 누르면 「내 대회」에 모이고, 목록에 없는 대회는 직접 추가할 수 있어요. 표시와 추가한 대회는 지금 쓰는 브라우저에만 저장돼요. 정보 기준일 2026.10.21.</p></div>
+  <div class="tools">
+    <label class="search" for="q">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="대회 이름 검색 (예: 춘천, 트레일, UTMB)" autocomplete="off">
+    </label>
+    <div class="menu" role="group" aria-label="대회 종류">
+      <button data-f="all" aria-pressed="true">전체</button>
+      <button data-f="road" aria-pressed="false">로드</button>
+      <button data-f="trail" aria-pressed="false">트레일</button>
+      <button data-f="fcfs" aria-pressed="false">선착순</button>
+      <button data-f="mine" aria-pressed="false">내 대회 ★</button>
+    </div>
+    <span class="count" id="count" aria-live="polite"></span>
+    <button class="addbtn kr" id="openAdd" aria-expanded="false" aria-controls="addForm">＋ 대회 추가</button>
+  </div>
+  <form class="addform" id="addForm" hidden novalidate>
+    <div class="tb"><span>New race</span><button type="button" id="closeAdd" aria-label="닫기">×</button></div>
+    <div class="lines">
+      <div class="line"><label for="a-name">대회 이름<em>필수</em></label><input id="a-name" required placeholder="예: 우리 동네 하프마라톤"></div>
+      <div class="line"><label for="a-type">종류</label><select id="a-type"><option value="road">로드</option><option value="trail">트레일</option></select></div>
+      <div class="line"><label for="a-date">접수 오픈일<em>D-day 계산</em></label><input id="a-date" type="date"></div>
+      <div class="line"><label for="a-time">오픈 시각</label><input id="a-time" type="time"></div>
+      <div class="line"><label for="a-method">방식</label><select id="a-method"><option value="fcfs">선착순</option><option value="lottery">추첨</option><option value="etc">기타·미정</option></select></div>
+      <div class="line"><label for="a-state">일정 상태</label><select id="a-state"><option value="est">예상</option><option value="fixed">확정</option></select></div>
+      <div class="line"><label for="a-race">대회일</label><input id="a-race" type="date"></div>
+      <div class="line"><label for="a-cap">정원</label><input id="a-cap" placeholder="예: 풀 5,000명"></div>
+      <div class="line"><label for="a-link">접수 링크</label><input id="a-link" type="url" placeholder="https://"></div>
+      <div class="line"><label for="a-note">메모·준비물</label><textarea id="a-note" rows="2" placeholder="기록 제출, 필수장비 등"></textarea></div>
+    </div>
+    <div class="foot"><span class="kr" id="addMsg">추가한 대회는 내 브라우저에만 저장돼요.</span><button class="send" type="submit">ADD RACE</button></div>
+  </form>
+  <div id="raceList" class="years">
+    <div class="yr"><h3>2026<span class="kr">년 접수</span></h3><span class="kr muted">진행 중이거나 남은 접수</span></div>
+    <div class="races" id="list2026"></div>
+    <details class="closed" open><summary class="kr">2026년에 이미 끝난 접수 <span class="muted" id="closedCount"></span></summary>
+      <div class="ctbl"><table><thead><tr><th>대회</th><th>접수 일시</th><th>방식</th><th>결과</th><th></th></tr></thead><tbody id="closed2026"></tbody></table></div>
+    </details>
+    <div class="yr"><h3>2027<span class="kr">년 접수</span></h3><span class="kr muted">지난 일정 기준 예상, 공지가 나오면 확정으로 바뀌어요</span></div>
+    <div class="races" id="list2027"></div>
+  </div>
+</section>
+
+<!-- KIT -->
+<section class="sec" id="kit" aria-labelledby="h-kit">
+  <div class="sec-h"><h2 id="h-kit">quick-fill kit</h2><p class="kr">신청서에 매번 들어가는 항목을 한 번 채워 두고, 접수 당일에는 복사해서 붙여 넣기만 하세요. 입력한 값은 내 브라우저에만 저장돼요.</p></div>
+  <div class="compose" id="compose">
+    <div class="tb"><span>New entry</span><span style="display:flex;gap:14px"><button id="mask" aria-pressed="false">가리기</button><button id="clear">지우기</button></span></div>
+    <div class="lines" id="lines"></div>
+    <div class="foot"><span class="kr">비밀번호, 카드번호, 주민등록번호는 넣지 마세요. 로그인은 브라우저 비밀번호 저장, 결제는 간편결제가 빠르고 안전해요.</span><span class="ic"><span>A</span><span>⌘C</span><span class="send">COPY</span></span></div>
+  </div>
+  <h3 class="kr" style="font-size:17px;letter-spacing:-.02em">미리 만들어 둘 계정 <span class="muted" style="font-weight:400;font-size:13px">눌러서 완료 표시</span></h3>
+  <div class="pills" id="pills"></div>
+</section>
+
+<!-- ERRORS -->
+<section class="sec" id="errors" aria-labelledby="h-err">
+  <div class="sec-h"><h2 id="h-err">when it breaks</h2><p class="kr">2027 대구마라톤 접수 첫날 실제로 뜬 화면과 대응법이에요. 파란 말풍선이 화면에 뜬 문구, 흰 말풍선이 할 일이에요.</p></div>
+  <div class="chat kr" id="chat"></div>
+</section>
+
+<!-- RULES -->
+<section class="sec" id="rules" aria-labelledby="h-rules">
+  <div class="sec-h"><h2 id="h-rules">ground rules</h2></div>
+  <div class="rules kr">
+    <div class="rule"><h3>공지를 놓치지 않으려면</h3><ul>
+      <li>각 대회 공식 인스타그램을 팔로우하고 게시물 알림 켜기</li>
+      <li>공지사항 게시판을 즐겨찾기에 모아 두고 주 1~2회 확인</li>
+      <li>접수 일정이 확정되면 캘린더에 D-7, D-1, 당일 30분 전 알림 등록</li>
+      <li>결제가 분리된 대회(대구, 춘천)는 결제 기간도 따로 등록</li>
+    </ul></div>
+    <div class="rule"><h3>꼭 지킬 것</h3><ul>
+      <li>로그인, 신청, 결제는 본인이 직접 하기</li>
+      <li>자동 반복 클릭이나 매크로는 쓰지 않기. 춘천마라톤은 「비정상적인 경로로 신청하면 참가 취소」라고 명시해 두었어요</li>
+      <li>한 사람 한 계정, 한 기기로 신청하기. 같은 아이디로 동시에 로그인하면 먼저 접속한 기기가 로그아웃되는 대회가 있어요</li>
+    </ul></div>
+  </div>
+</section>
+
+<section class="sec" id="sources" aria-labelledby="h-src">
+  <div class="sec-h"><h2 id="h-src">sources</h2><p class="kr">블로그 출처는 비공식이에요. 신청 전에 공식 공지로 한 번 더 확인하세요.</p></div>
+  <div class="src kr" id="src"></div>
+  <p class="foot-note kr">정보는 2026년 10월 21일 기준이에요. 대회 주최 측 공지에 따라 바뀔 수 있어요.</p>
+</section>
+</div>
+
+<nav class="dock" aria-label="섹션 이동">
+  <a href="#next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5m6-6-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>next</span></a>
+  <a href="#races"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="8" width="16" height="8" rx="1.5"/></svg><span>races</span></a>
+  <a href="#kit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 5 7 12l9 7z" stroke-linejoin="round"/></svg><span>kit</span></a>
+  <a href="#errors"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="7"/></svg><span>errors</span></a>
+  <a href="#sources"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><span>more</span></a>
+</nav>
+
+<script>
+const TODAY=(()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())})();
+const RACES = [
+ {id:"daegu-10k", until:"2026-11-01", type:"road", fcfs:true, name:"대구마라톤 2027 · 10K·5K 건강달리기", date:"2026-10-26", state:"fixed", whenText:"10.26(월) 10:00 ~ 11.1(일)",
+  method:"선착순. 신청과 결제 분리(결제 11.2~11.8)", cap:"10K 13,000 · 5K 4,000", speed:"지난번 10K 접수 당일 마감",
+  need:"대구마라톤 회원. 같은 아이디로 동시 로그인하면 이전 기기가 로그아웃됨. 풀코스 접수(10.12) 첫날 서버 장애가 있었으니 한산한 시간대도 고려",
+  links:[["접수","https://daegumarathon.daegu.go.kr/korAply/index.do"],["공지사항","https://daegumarathon.daegu.go.kr/kor/index.do?menu_id=00001824"],["인스타 @daegu_marathon","https://www.instagram.com/daegu_marathon/"]],
+  note:"단체 접수 11.16~11.19, 결제 11.20~11.22"},
+ {id:"seoul-half", type:"road", fcfs:true, name:"서울하프마라톤 (조선일보)", date:"2026-12-15", state:"est", whenText:"12월 중순 14:00 예상",
+  method:"선착순. 하프 먼저, 이틀 뒤 10K", cap:"미확인", speed:"약 3분 마감 (블로그)",
+  need:"지난번: 하프 2025.12.16 14:00, 10K 12.18 14:00. 대회 2026.4.26",
+  links:[["정리 글","https://aboda.kr/?p=24811"]], note:"공식 접수 주소는 공지가 뜨면 갱신 예정"},
+ {id:"jirisan", year:2026, type:"trail", fcfs:true, name:"지리산 화대종주 (추천)", date:null, state:"est", whenText:"지금 접수 중일 수 있음",
+  method:"온라인 신청, 접수 기간이 김(2026 대회는 2025.10.05~2026.04.30)", cap:"미확인", speed:null,
+  need:"48K / 40K / 34K / 21K. 화엄사에서 대원사까지 주능선 종주, 새벽 3시 출발",
+  links:[["대회 정보","https://runningwikii.com/entry/jirisan-hwaeomsa-daewonsa-ridge-utmb/"]], note:"2026 대회 5.24. 2027 접수가 이미 열렸는지 공지 확인 필요"},
+ {id:"blackyak", type:"trail", fcfs:true, name:"블랙야크 트레일런 제주 (추천)", date:"2026-12-09", state:"est", whenText:"12월 초 15:00 예상",
+  method:"선착순 여부 미확인", cap:"1,000명 이상", speed:null,
+  need:"50K / 25K 한라산 루프. 완주 시 UTMB 인덱스·ITRA 포인트 부여(보도)",
+  links:[["대회 사이트","https://blackyaktrailrun.blackyak.com/2026/jeju/"]], note:"지난번: 2025.12.10 15:00 오픈 (대회 2026.4.25)"},
+ {id:"jangsu-spring", type:"trail", fcfs:true, name:"장수트레일레이스 Spring · 38K", date:"2027-01-02", state:"est", whenText:"1월 초 14:00 예상",
+  method:"선착순(조기 마감 가능). 결제해야 접수 확정. 해마다 추첨과 선착순이 바뀜", cap:"미확인 (2025 가을 38K-P 800명)", speed:null,
+  need:"38K-P: 만 18세 이상, 기록 요건 없음. 참가비 15만 원. 필수장비 불시 점검, 컵 개인 지참",
+  links:[["접수","https://rocknrun.kr/JTR-Registration"],["홈페이지","https://rocknrun.kr"],["인스타 @rocknrun.kr","https://www.instagram.com/rocknrun.kr/"]],
+  note:"지난번: 2026.01.02 14:00 오픈 (대회 4.3~5)"},
+ {id:"k50-cc", type:"trail", fcfs:true, name:"코리아50K 춘천 (CC)", date:"2027-02-10", state:"est", whenText:"2월 중순 12:00 예상",
+  method:"선착순. 종목별로 하루씩 나눠 오픈", cap:"미확인", speed:null,
+  need:"CC50 / CC20 스카이레이스 / CC15. U23 할인은 증빙 필요",
+  links:[["홈페이지","https://korea50k.com"],["접수","https://jsceno-register.imweb.me"],["인스타 @korea50k","https://www.instagram.com/korea50k/"]],
+  note:"지난번: CC50 2026.02.11 12:00, CC20 02.12, CC15 02.13 (대회 6월)"},
+ {id:"tnf100", type:"trail", fcfs:true, name:"TNF 100 코리아 (대관령 → 강릉)", date:"2027-02-26", state:"est", whenText:"2월 말 10:00 예상",
+  method:"선착순(노스페이스 공식몰) + 추가 추첨(노스페이스 아웃도어 인스타 링크)", cap:"100K 400 · 50K 600 · 22K 200 · 10K 1,000", speed:"100K·50K·22K 약 1분 매진",
+  need:"50K·100K는 전날 선수 등록과 장비 검사 필수. 참가비 50K 17만 원",
+  links:[["2026 접수 기사","https://sports.khan.co.kr/article/202602250008003"]], note:"지난번: 2026.02.27 10:00 (대회 5.16~17). 추가 추첨 3.6 응모"},
+ {id:"transjeju", type:"trail", fcfs:true, name:"트랜스제주 by UTMB (추천)", date:"2027-03-18", state:"est", whenText:"3월 중순 17:00 예상",
+  method:"선착순, UTMB 사이트, 환불 불가. 20K 우선접수 후 일반접수", cap:"전 종목 매진(2026)", speed:null,
+  need:"UTMB 인덱스 필요(100K는 50K 인덱스, 60K는 20K 인덱스). 러닝스톤 적립 대회",
+  links:[["대회 사이트","https://transjeju.utmb.world/"],["접수 안내","https://transjeju.utmb.world/races-runners/runners/Registration"]],
+  note:"지난번: 20K 2026.03.18 17:00, 일반 03.20 17:00 (대회 10.2~4)"},
+ {id:"jtbc", type:"road", fcfs:false, name:"JTBC 서울마라톤", date:"2027-04-12", state:"est", whenText:"4월 중순 래플 예상",
+  method:"추첨(러너블 계단식 래플). 기록 구간별로 뽑고, 떨어지면 다음 회차로 넘어감. 발표 직후 결제", cap:"약 32,000명 (본접수 풀 1만 · 10K 1만)", speed:null,
+  need:"카카오 러너스카드 필수(러너블에서 발급). 서브3, 서브4 등 기록이 있으면 앞 회차에서 추첨됨. 1인 여러 번 응모하면 마지막 응모만 인정",
+  links:[["러너블","https://runable.me/competition"],["공지사항","http://marathon.jtbc.com/17"],["인스타 @jtbc_seoul_marathon","https://www.instagram.com/jtbc_seoul_marathon/"]],
+  note:"지난번 응모: 2026.04.13 14:00~04.15 16:00, 발표 04.17 13:00. 2027 개최 방식은 미공지"},
+ {id:"dongma-member", type:"road", fcfs:true, name:"동마클럽 2027 멤버십 (런저니)", date:"2027-01-28", state:"est", whenText:"1월 말 14:00 예상",
+  method:"선착순 4,000명(2026). 서울마라톤 신청자만 가입 가능. 연회비 15만 원", cap:"4,000명 (2026)", speed:"2026 상품 SOLD OUT",
+  need:"공주백제·경주국제 참가권 + 다음 해 서울마라톤 우선 신청권 + 런저니 메달 + 멤버십 존. 참가권이 있어도 대회별 신청은 따로 해야 함",
+  links:[["동마클럽","https://dongma.club"],["2026 멤버십 상품","https://dongma.club/product/2026-%EB%8F%99%EC%95%84%EB%A7%88%EB%9D%BC%ED%86%A4-%EB%A9%A4%EB%B2%84%EC%8B%AD/1034/"],["런저니 안내","https://seoul-marathon.com/89"]],
+  note:"지난번: 2026.01.29(목) 14:00 오픈"},
+ {id:"gongju", type:"road", fcfs:true, name:"공주백제마라톤 2027 (런저니)", date:"2027-05-24", state:"est", whenText:"5월 말 19:00 예상",
+  method:"멤버십 우선접수 → 약 1주 뒤 일반 본접수(선착순). 동마클럽에서 신청", cap:"미확인", speed:null,
+  need:"풀 / 32K / 하프 / 10K / 5K. 런저니는 10km 이상 완주. 대회 9월 셋째 주 일요일(2026: 9.20)",
+  links:[["동마클럽","https://dongma.club"],["접수 정리","https://runningwikii.com/entry/gongju-baekje-marathon-registration-schedule-guide/"]],
+  note:"2025 기준: 멤버십 우선 5.26 19:00, 일반 6.03 19:00. 2027 대회일 9.19 예상"},
+ {id:"gyeongju-intl", type:"road", fcfs:true, name:"경주국제마라톤 2027 (런저니)", date:"2027-05-25", state:"est", whenText:"5월 말 19:00 예상",
+  method:"멤버십 우선접수 후 일반 접수", cap:"마스터스 약 2만 명(2026)", speed:null,
+  need:"풀 / 하프 / 10K. WA 엘리트라벨. 런저니 메달은 경주 완주 후 수여. 대회 10월 중순 토요일(2026: 10.17)",
+  links:[["참가 신청","https://www.gyeongjumarathon.com/50"],["홈페이지","https://www.gyeongjumarathon.com/home"]],
+  note:"지난번 접수: 2026.05.26 19:00. 2027 대회일 10.16 예상"},
+ {id:"seoul", type:"road", fcfs:true, name:"서울마라톤 (동아마라톤) 2028", date:"2027-04-27", state:"est", whenText:"4월 말 기록 제출 → 6월 초 본접수",
+  method:"풀코스는 그룹별 선착순(A~H, 19:00~22:00). 기록이 좋을수록 앞 그룹. 접수할 때 바로 결제", cap:"2026 대회 기준 풀 20,000 · 10K 20,000", speed:"2027 대회 전 종목 매진 (2026.6.4 공지)",
+  need:"풀코스: 공인 풀 기록 4:59:59 이내, 런카이브에 기록 제출(임시 기록증 불가). 기록이 없으면 마지막 그룹만 가능",
+  links:[["공지사항","https://seoul-marathon.com/94"],["접수(동마클럽)","https://dongma.club"],["기록 제출(런카이브)","https://runarchive.com"],["인스타 @seoul_marathon","https://www.instagram.com/seoul_marathon/"]],
+  note:"2027 대회(3.21)는 접수 끝남. 지난번: 기록 제출 2026.04.28~05.11, 본접수 06.01~02"},
+ {id:"godg", type:"trail", fcfs:true, name:"Go대관령 국제트레일런", date:"2027-06-05", state:"est", whenText:"6월 초 예상",
+  method:"자체 홈페이지 접수(약 한 달간)", cap:"약 1,500명 (2025)", speed:null,
+  need:"10K / 20.18K / 44K. 2025 참가비 44K 10만 원",
+  links:[["접수","https://daegwallyeongrun.com/apply"],["홈페이지","https://daegwallyeongrun.com"]], note:"대회 8월 말(2026: 8.30). 2025 접수 06.05~07.05"},
+ {id:"jangsu-fall", type:"trail", fcfs:true, name:"장수트레일레이스 Fall · 38K", date:"2027-06-09", state:"est", whenText:"6월 초 예상",
+  method:"2026: 선착순, 종목별 오픈 시각 별도 공지 / 2025: 사전접수 후 추첨", cap:"미확인", speed:null,
+  need:"38P 자격 요건 없음(만 18세 이상). 100K 이상은 ITRA 포인트나 UTMB 인덱스 증빙",
+  links:[["접수 안내","https://rocknrun.kr/2026_JTR_Fall_Registration"],["인스타 @rocknrun.kr","https://www.instagram.com/rocknrun.kr/"]], note:"지난번: 2026.06.10 오픈 (대회 9.18~20)"},
+ {id:"chuncheon", type:"road", fcfs:true, name:"춘천마라톤 (조선일보)", date:"2027-07-13", state:"est", whenText:"7월 중순 14:00 예상",
+  method:"선착순. 신청과 결제가 분리돼 있고 결제 기간을 놓치면 삭제. 9월에 미결제분 추가 접수", cap:"약 2만 명 (2025: 풀 11,193 · 10K 9,442)", speed:"풀 약 4분 · 10K 약 10분 마감",
+  need:"풀 만 18세 이상. 6월에 조선멤버십 얼리버드와 5~8회 완주자 추첨이 먼저 열림. 「비정상적인 경로로 신청하면 참가 취소」 규정",
+  links:[["접수","https://www.chuncheonmarathon.com/apply/part-application.html"],["공지 게시판","https://board.chosun.com/nbrd/bbs/list.html?b_bbs_id=10005&branch=&pn=1"]],
+  note:"지난번: 풀 2026.07.14 14:00, 10K 07.16 14:00 (대회 10.25)"},
+ {id:"daegu-next", type:"road", fcfs:true, name:"대구마라톤 2028", date:"2027-10-11", state:"est", whenText:"10월 중순 10:00 예상",
+  method:"선착순. 신청과 결제 분리", cap:"풀 15,000 (2027 대회)", speed:"2년 연속 접수 첫날 서버 마비",
+  need:"대구마라톤 회원(카카오·네이버 로그인 가능). 같은 아이디로 동시 로그인하면 이전 기기가 로그아웃됨",
+  links:[["접수","https://daegumarathon.daegu.go.kr/korAply/index.do"],["공지사항","https://daegumarathon.daegu.go.kr/kor/index.do?menu_id=00001824"],["인스타 @daegu_marathon","https://www.instagram.com/daegu_marathon/"]],
+  note:"2027 대회: 풀 2026.10.12 10:00 오픈, 10K·5K 10.26 10:00"},
+ {id:"halla100", type:"trail", fcfs:false, name:"한라산 100 트레일런 (추천)", date:"2027-03-23", state:"est", whenText:"3월 하순 예상",
+  method:"공식 홈페이지 접수(약 한 달). 선착순·추첨 미확인", cap:"미확인", speed:null,
+  need:"100M / 100K / 50K / 36K / 10K. 대회 6월 초(2026: 6.6)",
+  links:[["신청","https://ktra.kr/58"],["홈페이지","http://ktra.kr/"]], note:"지난번: 2026.03.24~04.30"},
+ {id:"seoul100k", type:"trail", fcfs:true, name:"서울100K (추천)", date:"2027-06-01", state:"est", whenText:"6월 초 예상",
+  method:"사전접수 후 다음 날 일반접수 선착순(inthetrail.com)", cap:"100K 500 · 50K 500 · 20K 1,700", speed:null,
+  need:"서울 도심 산을 잇는 울트라. 대회 9월(2026: 9.19~20)",
+  links:[["홈페이지","https://www.seoul100k.com"]], note:"지난번: 사전 2026.06.01 14:00, 일반 06.02 10:00"},
+ {id:"sonkeechung", type:"road", fcfs:true, name:"손기정평화마라톤 (추천)", date:"2027-08-09", state:"est", whenText:"8월 예상",
+  method:"선착순, 빠르게 마감", cap:"약 2만 명", speed:null,
+  need:"풀 / 하프 / 10K. 11월 시즌 마무리용(2026: 11.15)",
+  links:[["홈페이지","https://sonkeechungrun.com"]], note:"지난번: 2026.08.09~09.14"},
+ {id:"gyeongju", year:2027, type:"road", fcfs:true, name:"경주벚꽃마라톤 (추천)", date:null, state:"est", whenText:"접수 시기 미확인",
+  method:"선착순", cap:"15,000명", speed:"오픈 1분 만에 마감",
+  need:"대회 4월 초", links:[["대회 일정 정리","https://runningwikii.com/entry/2026-major-marathon-calendar/"]], note:"공지 감시 목록에 넣어 두고 접수 시기가 나오면 갱신"}
+];
+const SOURCES = [
+ ["대구MBC · 2026 대구마라톤 홈페이지 중단","https://dgmbc.com/article/jrlG2f5naxrNQW0"],
+ ["경북매일 · 2027 대구마라톤 접수 일정","https://www.kbmaeil.com/article/20260920500342"],
+ ["헤럴드K · 2026 대구마라톤 21일 만에 마감","https://www.heraldk.com/article/2025101318073226090"],
+ ["서울마라톤 · 2027 접수 일정 공지","https://seoul-marathon.com/94/?bmode=view&idx=171044053"],
+ ["서울마라톤 · 매진 공지","https://seoul-marathon.com/94/?bmode=view&idx=171627770"],
+ ["JTBC 서울마라톤 · 공지","http://marathon.jtbc.com/17/?bmode=view&idx=172130391"],
+ ["러닝위키 · 2026 JTBC 마라톤 래플","https://runningwikii.com/entry/2026-jtbc-marathon/"],
+ ["조선일보 춘천마라톤 게시판","https://board.chosun.com/nbrd/bbs/list.html?b_bbs_id=10005&branch=&pn=1"],
+ ["aboda · 서울하프 접수","https://aboda.kr/?p=24811"],
+ ["코리아50K · 2026 춘천 접수 공지","https://korea50k.com/home/?bmode=view&idx=169854715"],
+ ["트레일러너스 · 코리아50K 2025 추첨","https://trailrunners.kr/28/?bmode=view&idx=130486409"],
+ ["스포츠경향 · TNF100 2026 접수","https://sports.khan.co.kr/article/202602250008003"],
+ ["락앤런 · 장수 Spring 접수","https://rocknrun.kr/JTR-Registration"],
+ ["락앤런 · 장수 Fall 2026 접수","https://rocknrun.kr/2026_JTR_Fall_Registration"],
+ ["트랜스제주 by UTMB · 접수","https://transjeju.utmb.world/races-runners/runners/Registration"],
+ ["러닝위키 · 2026 메이저 마라톤 캘린더","https://runningwikii.com/entry/2026-major-marathon-calendar/"],
+ ["동마클럽 · 2026 동아마라톤 멤버십","https://dongma.club/product/2026-%EB%8F%99%EC%95%84%EB%A7%88%EB%9D%BC%ED%86%A4-%EB%A9%A4%EB%B2%84%EC%8B%AD/1034/"],
+ ["서울마라톤 · 런저니 레이스","https://seoul-marathon.com/89"],
+ ["러닝위키 · 공주백제마라톤 접수","https://runningwikii.com/entry/gongju-baekje-marathon-registration-schedule-guide/"],
+ ["러닝위키 · 경주국제마라톤","https://runningwikii.com/entry/gyeongju-international-marathon/"],
+ ["경북매일 · 2026 경주국제마라톤","https://www.kbmaeil.com/article/20260927500126"],
+ ["서울100K","https://www.seoul100k.com"],
+ ["블랙야크 트레일런 제주","https://blackyaktrailrun.blackyak.com/2026/jeju/"],
+ ["러닝위키 · 한라산 100","https://runningwikii.com/entry/2026-hallasan-100-trail-run/"],
+ ["러닝위키 · 손기정평화마라톤 접수","https://runningwikii.com/entry/sonkeechung-peace-marathon-registration-schedule-guide/"]
+];
+const CLOSED = [
+ ["대구마라톤 2027 · 풀코스","2026.10.12 10:00 ~ 10.18","선착순","첫날 서버 장애·대기열 수천 명","https://daegumarathon.daegu.go.kr/korAply/index.do"],
+ ["손기정평화마라톤 2026","2026.08.09 ~ 09.14","선착순","약 2만 명 빠르게 마감","https://sonkeechungrun.com"],
+ ["춘천마라톤 2026 · 풀","2026.07.14 14:00","선착순","약 4분 마감 (10K 약 10분)","https://www.chuncheonmarathon.com/apply/part-application.html"],
+ ["장수트레일레이스 Fall 2026","2026.06.10","선착순","종목별 오픈 시각 별도","https://rocknrun.kr/2026_JTR_Fall_Registration"],
+ ["서울100K 2026","2026.06.01 사전 · 06.02 10:00 일반","선착순","—","https://www.seoul100k.com"],
+ ["서울마라톤(동아) 2027","2026.06.01~02 그룹별 19:00~22:00","선착순","6.4 전 종목 매진","https://dongma.club"],
+ ["경주국제마라톤 2026","2026.05.26 19:00","선착순","—","https://www.gyeongjumarathon.com/50"],
+ ["JTBC 서울마라톤 2026","2026.04.13 14:00 ~ 04.15 16:00","추첨(래플)","4.17 발표 후 결제","https://runable.me/competition"],
+ ["트랜스제주 by UTMB 2026","2026.03.18 17:00 · 03.20 17:00","선착순","전 종목 마감","https://transjeju.utmb.world/"],
+ ["TNF 100 코리아 2026","2026.02.27 10:00","선착순 + 추가 추첨","100K·50K·22K 약 1분 매진","https://sports.khan.co.kr/article/202602250008003"],
+ ["코리아50K 춘천 2026","2026.02.11 12:00 (CC50)","선착순","—","https://korea50k.com"],
+ ["장수트레일레이스 Spring 2026","2026.01.02 14:00","선착순","—","https://rocknrun.kr/JTR-Registration"]
+]
+;
+const CKEY="raceboard.custom.v1"; let CUSTOM=[]; try{CUSTOM=JSON.parse(localStorage.getItem(CKEY)||"[]")}catch(e){CUSTOM=[]}
+const saveCustom=()=>{try{localStorage.setItem(CKEY,JSON.stringify(CUSTOM))}catch(e){}};
+const ALL=()=>RACES.concat(CUSTOM);
+const SKEY="raceboard.star.v1"; let STAR={}; try{STAR=JSON.parse(localStorage.getItem(SKEY)||"{}")}catch(e){STAR={}}
+const saveStar=()=>{try{localStorage.setItem(SKEY,JSON.stringify(STAR))}catch(e){}};
+const isMine=r=>r.custom||!!STAR[r.id];
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function parts(d){ if(!d) return null; const [y,m,dd]=d.split("-").map(Number); return {y,m,dd,date:new Date(y,m-1,dd)}; }
+function dday(d){ const p=parts(d); return p?Math.round((p.date-TODAY)/864e5):null; }
+function ddLabel(n){ if(n===null) return "D-?"; if(n===0) return "D-DAY"; return n>0?`D-${n}`:`D+${-n}`; }
+function cal(d){ const p=parts(d); return p?`<span class="cal" aria-hidden="true"><span class="m">${MON[p.m-1]}</span><span class="d">${p.dd}</span></span>`:`<span class="cal" aria-hidden="true"><span class="m">TBA</span><span class="d">?</span></span>`; }
+const ST={fixed:"확정",est:"예상"};
+const upcoming=()=>ALL().filter(r=>r.date&&dday(r.date)>=0).sort((a,b)=>a.date.localeCompare(b.date));
+
+/* hero mini card: nearest race */
+function renderHero(){
+  const r=upcoming()[0]; if(!r){ $("#heroCard").parentElement.hidden=true; return; }
+  $("#heroCard").innerHTML=`<div class="who"><span class="av"></span><div><b>race entry</b><br><span class="muted">다음 접수</span></div></div>
+   <div class="event">${cal(r.date)}<div style="min-width:0"><b style="font-size:12px">${esc(r.name)}</b><br><span class="chip">Nearest</span> <span class="muted">${esc(r.whenText)}</span></div></div>`; $("#heroCard").parentElement.hidden=false;
+}
+
+/* next up */
+function renderNotes(){ $("#notes").innerHTML=upcoming().slice(0,4).map(r=>{const n=dday(r.date);return `<article class="note ${n<=7?'soon':''}">
+  <div class="bar"><span class="app" aria-hidden="true">✓</span><span>${r.type==="road"?"road race":"trail race"}</span><span>${n<=7?"soon":"upcoming"}</span></div>
+  <div class="body"><span class="dd">${ddLabel(n)}</span><b>${esc(r.name)}</b><span>${esc(r.whenText)}${r.whenText.includes(ST[r.state])?"":" · "+ST[r.state]}</span></div></article>`}).join("") || `<p class="muted kr">다가오는 접수 일정이 없어요.</p>`; }
+
+/* races */
+let filter="all", q="";
+function countdown(r){
+  const n=dday(r.date), u=r.until?dday(r.until):null;
+  let cls="", top="접수까지", big=ddLabel(n), sub=r.state==="est"?"예상일 기준":"";
+  if(n===null){ big="D-?"; top="접수일"; sub="미정"; cls="tba"; }
+  else if(n<0 && u!==null && u>=0){ cls="live"; top="접수 중"; big=u===0?"오늘 마감":`마감 D-${u}`; sub=""; }
+  else if(n<0){ cls="over"; top="접수"; big="마감"; sub=""; }
+  else if(n===0){ cls="live"; top="오늘 오픈"; big="D-DAY"; }
+  else if(n<=7){ cls="soon"; }
+  return `<div class="cd ${cls}" aria-label="${top} ${big}"><span>${top}</span><b>${big}</b>${sub?`<span>${sub}</span>`:""}</div>`;
+}
+const yearOf=r=>r.year||(r.date?+r.date.slice(0,4):2027);
+function card(r){const n=dday(r.date);return `<article class="win ${r.type}${isMine(r)?' mine':''}">
+    <div class="tb"><span class="kind">${r.custom?'':`<button type="button" class="star" data-star="${esc(r.id)}" aria-pressed="${STAR[r.id]?'true':'false'}" aria-label="${esc(r.name)} 내 대회로 표시">${STAR[r.id]?'★':'☆'}</button>`}<span class="dot"></span>${r.type==="road"?"Road":"Trail"} · ${r.fcfs?"선착순":"추첨·기타"}${isMine(r)?'<span class="mytag">MY</span>':''}</span><span class="x">${r.custom?`<button type="button" data-del="${esc(r.id)}" aria-label="${esc(r.name)} 삭제">×</button>`:''}</span></div>
+    <div class="head">${cal(r.date)}<div style="min-width:0;flex:1"><h3>${esc(r.name)}</h3><div class="when"><span>${esc(r.whenText)}</span><span class="state ${r.state}">${ST[r.state]}</span></div></div>${countdown(r)}</div>
+    <dl>
+      <div><dt>방식</dt><dd>${esc(r.method)}</dd></div>
+      <div><dt>정원</dt><dd>${esc(r.cap)}</dd></div>
+      ${r.speed?`<div><dt>마감</dt><dd class="speed">${esc(r.speed)}</dd></div>`:""}
+      <div><dt>준비·자격</dt><dd>${esc(r.need)}</dd></div>
+      ${r.note?`<div><dt>메모</dt><dd class="muted">${esc(r.note)}</dd></div>`:""}
+    </dl>
+    <div class="acts">${r.links.map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)} ↗</a>`).join("")}</div>
+  </article>`}
+function renderRaces(){
+  const t=q.trim().toLowerCase();
+  const match=txt=>!t||txt.toLowerCase().includes(t);
+  const list=ALL().filter(r=>filter==="all"||(filter==="mine"?isMine(r):filter==="fcfs"?r.fcfs:r.type===filter))
+    .filter(r=>match([r.name,r.method,r.need,r.type==="trail"?"트레일 trail":"로드 road"].join(" ")))
+    .sort((a,b)=>(a.date||"9999").localeCompare(b.date||"9999"));
+  const y26=list.filter(r=>yearOf(r)<=2026), y27=list.filter(r=>yearOf(r)>=2027);
+  const empty=`<div class="empty kr">조건에 맞는 대회가 없어요. 검색어를 바꾸거나 「전체」를 눌러 보세요.</div>`;
+  $("#list2026").innerHTML=y26.length?y26.map(card).join(""):empty;
+  $("#list2027").innerHTML=y27.length?y27.map(card).join(""):empty;
+  const closed=(filter==="all"||filter==="fcfs"&&true)?CLOSED.filter(c=>match(c.join(" "))&&(filter!=="fcfs"||c[2].startsWith("선착순"))):[];
+  $("#closed2026").innerHTML=closed.map(([n,d,m,r,u])=>`<tr><td>${esc(n)}</td><td>${esc(d)}</td><td>${esc(m)}</td><td>${esc(r)}</td><td><a href="${esc(u)}" target="_blank" rel="noopener">접수처 ↗</a></td></tr>`).join("")||`<tr><td colspan="5" class="muted">해당하는 기록이 없어요.</td></tr>`;
+  $("#closedCount").textContent=`${closed.length}개`;
+  $("#count").textContent=`${list.length}개 대회`;
+}
+document.querySelectorAll(".menu button").forEach(b=>b.addEventListener("click",()=>{
+  filter=b.dataset.f; document.querySelectorAll(".menu button").forEach(c=>c.setAttribute("aria-pressed",c===b?"true":"false")); renderRaces();
+}));
+$("#q").addEventListener("input",e=>{q=e.target.value; renderRaces();});
+function renderAll(){ renderHero(); renderNotes(); renderRaces(); }
+let delArmed=null;
+$("#raceList").addEventListener("click",e=>{const sid=e.target.dataset.star; if(sid){ STAR[sid]=!STAR[sid]; if(!STAR[sid]) delete STAR[sid]; saveStar(); renderRaces(); return; }
+  const id=e.target.dataset.del; if(!id) return;
+  if(delArmed!==id){ delArmed=id; e.target.textContent="삭제?"; setTimeout(()=>{ if(delArmed===id){delArmed=null; renderRaces();} },3000); return; }
+  CUSTOM=CUSTOM.filter(r=>r.id!==id); saveCustom(); delArmed=null; renderAll(); });
+const form=$("#addForm"), openBtn=$("#openAdd");
+function toggleAdd(on){ form.hidden=!on; openBtn.setAttribute("aria-expanded",on); if(on) $("#a-name").focus(); }
+openBtn.addEventListener("click",()=>toggleAdd(form.hidden));
+$("#closeAdd").addEventListener("click",()=>toggleAdd(false));
+form.addEventListener("submit",e=>{ e.preventDefault();
+  const v=id=>document.getElementById(id).value.trim(); const name=v("a-name"), msg=$("#addMsg");
+  if(!name){ msg.innerHTML='<span class="err-msg">대회 이름을 입력해 주세요.</span>'; $("#a-name").focus(); return; }
+  let link=v("a-link"); if(link && !/^https?:\/\//i.test(link)) link="https://"+link;
+  const date=v("a-date")||null, time=v("a-time"), m=v("a-method"), raceDay=v("a-race");
+  const fmt=d=>{const p=d.split("-");return `${+p[1]}.${+p[2]}`};
+  const r={id:"c"+Date.now(), custom:true, type:v("a-type"), fcfs:m==="fcfs", name, date, state:v("a-state"),
+    whenText: date?`${fmt(date)}${time?" "+time:""} 오픈`:"접수일 미정",
+    method: m==="fcfs"?"선착순":m==="lottery"?"추첨":"기타·미정", cap:v("a-cap")||"미확인", speed:null,
+    need: raceDay?`대회일 ${raceDay.replace(/-/g,".")}`:"—", note:v("a-note")||null,
+    links: link?[["접수",link]]:[]};
+  CUSTOM.push(r); saveCustom(); form.reset(); msg.textContent=`「${name}」을 추가했어요.`; renderAll();
+});
+renderAll();
+
+/* kit */
+const FIELDS=[
+ ["name","이름",""],["name_en","영문 이름","UTMB·해외"],["birth","생년월일","YYYY-MM-DD"],["gender","성별",""],
+ ["phone","휴대폰",""],["email","이메일",""],["zip","우편번호","기념품 배송"],["addr","주소",""],["addr2","상세 주소",""],
+ ["shirt","티셔츠 사이즈","예: 여 M / 90"],["blood","혈액형",""],["em_name","비상연락처 이름",""],["em_rel","비상연락처 관계",""],
+ ["em_phone","비상연락처 번호",""],["pb_full","풀코스 최고기록","대회·날짜·기록"],["pb_half","하프·10K 기록","출발 그룹"],
+ ["itra","ITRA ID / 포인트","트레일 100K+"],["utmb","UTMB 인덱스","트랜스제주"],["club","소속 클럽·크루","단체 접수"]
+];
+const KEY="raceboard.kit.v1"; let kit={}; try{kit=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){kit={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(kit))}catch(e){}};
+$("#lines").innerHTML=FIELDS.map(([k,l,h])=>`<div class="line"><label for="f-${k}">${l}${h?`<em>${h}</em>`:""}</label><input id="f-${k}" data-k="${k}" autocomplete="off" value="${esc(kit[k]||"")}"><button type="button" data-copy="${k}">COPY</button></div>`).join("");
+$("#lines").addEventListener("input",e=>{const k=e.target.dataset.k; if(k){kit[k]=e.target.value; save();}});
+$("#lines").addEventListener("click",e=>{const k=e.target.dataset.copy; if(!k) return; const inp=document.getElementById("f-"+k), b=e.target;
+  const done=()=>{b.textContent="COPIED";b.classList.add("ok");setTimeout(()=>{b.textContent="COPY";b.classList.remove("ok")},1200)};
+  try{navigator.clipboard.writeText(inp.value).then(done,()=>{inp.select()})}catch(err){inp.select()}});
+$("#mask").addEventListener("click",e=>{const on=$("#compose").classList.toggle("masked");e.target.setAttribute("aria-pressed",on);e.target.textContent=on?"보이기":"가리기";});
+let armed=false; $("#clear").addEventListener("click",e=>{ if(!armed){armed=true;e.target.textContent="한 번 더";setTimeout(()=>{armed=false;e.target.textContent="지우기"},3000);return;}
+  kit={};save();document.querySelectorAll("#lines input").forEach(i=>i.value="");armed=false;e.target.textContent="지우기";});
+
+/* accounts pills */
+const ACC=[["대구마라톤 회원","대구"],["동마클럽 + 런카이브","서울 · 공주 · 경주"],["러너블 + 카카오 러너스카드","JTBC"],["춘천마라톤 회원","춘천 · 서울하프"],["노스페이스 공식몰","TNF100"],["UTMB 계정 + 인덱스","트랜스제주"],["락앤런 회원","장수트레일"],["JSCENO 회원","코리아50K"],["간편결제","결제 공통"]];
+const AKEY="raceboard.acc.v1"; let acc={}; try{acc=JSON.parse(localStorage.getItem(AKEY)||"{}")}catch(e){acc={}}
+const person='<svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>';
+const lock='<svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="#fff" stroke-width="2"/></svg>';
+function renderPills(){ $("#pills").innerHTML=ACC.map(([t,r],i)=>`<button class="pill" data-i="${i}" aria-pressed="${acc[i]?'true':'false'}"><span class="ico">${acc[i]?person:lock}</span><span><b class="kr">${t}</b><span class="kr">${acc[i]?"준비 완료":r}</span></span></button>`).join(""); }
+$("#pills").addEventListener("click",e=>{const b=e.target.closest(".pill"); if(!b) return; const i=b.dataset.i; acc[i]=!acc[i]; try{localStorage.setItem(AKEY,JSON.stringify(acc))}catch(err){} renderPills();});
+renderPills();
+
+
+/* chat */
+const ERR=[
+ ["대기 2,200명","대기열에 서 있는 중이에요. 그대로 기다리세요. 순번이 1까지 줄었다가 다시 커지면 다음 단계의 대기열이에요."],
+ ["안내 팝업이 안 닫혀요","페이지가 덜 불러와진 상태예요. 새 탭에서 로그인 주소로 바로 들어가세요."],
+ ["흰 화면에 새로고침 아이콘만 보여요","서버가 빈 응답을 보낸 거예요. 2~3분 간격으로 한 번씩만 새로고침하세요."],
+ ["로그인 처리 중 오류가 발생했습니다","로그인 서버 과부하예요. 시크릿 창으로 바꿔도 같아요. 10분 간격으로 시도하고 밤이나 이른 아침을 노리세요."],
+ ["신청에 실패했습니다","다시 누르기 전에 마이페이지 신청 내역부터 확인하세요. 실패로 떠도 실제로는 접수됐을 수 있어요."],
+ ["잠시 후 다시 이용해 주세요","반복 요청을 잠깐 막은 거예요. 5분 쉬고 한 번만 누르세요. 연타하면 더 오래 막혀요."]
+];
+$("#chat").innerHTML=ERR.map(([a,b])=>`<div class="pair"><div class="bub err">${esc(a)}</div><div class="bub fix"><small>할 일</small>${esc(b)}</div></div>`).join("");
+
+/* sources */
+$("#src").innerHTML=SOURCES.map(([t,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join("");
+</script>
+</body>
+</html>
