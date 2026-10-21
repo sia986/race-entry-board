@@ -132,6 +132,7 @@ button{font:inherit;color:inherit}
 .win .acts{display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 14px 13px;border-top:1px solid var(--hair);background:var(--card-2)}
 .win .acts a{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--blue-ink)}
 .win .acts a:hover{text-decoration:underline}
+.win .acts .na{font-size:12px;font-weight:600;color:#a0a1a6}
 .win.mine{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),var(--shadow)}
 .win .tb .x button{border:0;background:transparent;cursor:pointer;color:var(--sub);font-size:15px;line-height:1;padding:0 0 0 8px}
 .win .tb .x button:hover{color:var(--red)}
@@ -379,97 +380,97 @@ const RACES = [
  {id:"daegu-10k", until:"2026-11-01", type:"road", fcfs:true, name:"대구마라톤 2027 · 10K·5K 건강달리기", date:"2026-10-26", state:"fixed", whenText:"10.26(월) 10:00 ~ 11.1(일)",
   method:"선착순. 신청과 결제 분리(결제 11.2~11.8)", cap:"10K 13,000 · 5K 4,000", speed:"지난번 10K 접수 당일 마감",
   need:"대구마라톤 회원. 같은 아이디로 동시 로그인하면 이전 기기가 로그아웃됨. 풀코스 접수(10.12) 첫날 서버 장애가 있었으니 한산한 시간대도 고려",
-  links:[["접수","https://daegumarathon.daegu.go.kr/korAply/index.do"],["공지사항","https://daegumarathon.daegu.go.kr/kor/index.do?menu_id=00001824"],["인스타 @daegu_marathon","https://www.instagram.com/daegu_marathon/"]],
+  links:[["공식 접수", "https://daegumarathon.daegu.go.kr/korAply/index.do"], ["홈페이지", "https://daegumarathon.daegu.go.kr/"], ["인스타 @daegu_marathon", "https://www.instagram.com/daegu_marathon/"]],
   note:"단체 접수 11.16~11.19, 결제 11.20~11.22"},
  {id:"seoul-half", type:"road", fcfs:true, name:"서울하프마라톤 (조선일보)", date:"2026-12-15", state:"est", whenText:"12월 중순 14:00 예상",
   method:"선착순. 하프 먼저, 이틀 뒤 10K", cap:"미확인", speed:"약 3분 마감 (블로그)",
   need:"지난번: 하프 2025.12.16 14:00, 10K 12.18 14:00. 대회 2026.4.26",
-  links:[["정리 글","https://aboda.kr/?p=24811"]], note:"공식 접수 주소는 공지가 뜨면 갱신 예정"},
+  links:[["공식 접수", "https://seoulhalfmarathon.com/apply/part-application.html"], ["홈페이지", "https://seoulhalfmarathon.com"], ["인스타 @seoulhalfmarathon", "https://www.instagram.com/seoulhalfmarathon/"]], note:null},
  {id:"jirisan", year:2026, type:"trail", fcfs:true, name:"지리산 화대종주 (추천)", date:null, state:"est", whenText:"지금 접수 중일 수 있음",
   method:"온라인 신청, 접수 기간이 김(2026 대회는 2025.10.05~2026.04.30)", cap:"미확인", speed:null,
   need:"48K / 40K / 34K / 21K. 화엄사에서 대원사까지 주능선 종주, 새벽 3시 출발",
-  links:[["대회 정보","https://runningwikii.com/entry/jirisan-hwaeomsa-daewonsa-ridge-utmb/"]], note:"2026 대회 5.24. 2027 접수가 이미 열렸는지 공지 확인 필요"},
+  links:[["공식 접수", "https://koreatrail.net/home/main.php?link=event&einc=eapp&opp=20250820150217&csno=20191209143330"], ["홈페이지", "https://koreatrail.net"], ["인스타 미확인", null]], note:"2026 대회 5.24. 2027 접수가 이미 열렸는지 공지 확인 필요"},
  {id:"blackyak", type:"trail", fcfs:true, name:"블랙야크 트레일런 제주 (추천)", date:"2026-12-09", state:"est", whenText:"12월 초 15:00 예상",
   method:"선착순 여부 미확인", cap:"1,000명 이상", speed:null,
   need:"50K / 25K 한라산 루프. 완주 시 UTMB 인덱스·ITRA 포인트 부여(보도)",
-  links:[["대회 사이트","https://blackyaktrailrun.blackyak.com/2026/jeju/"]], note:"지난번: 2025.12.10 15:00 오픈 (대회 2026.4.25)"},
+  links:[["공식 접수", "https://blackyaktrailrun.blackyak.com/2026/jeju/Registration/"], ["홈페이지", "https://blackyaktrailrun.blackyak.com/2026/jeju/"], ["인스타 @blackyak.official", "https://www.instagram.com/blackyak.official/"]], note:"지난번: 2025.12.10 15:00 오픈 (대회 2026.4.25)"},
  {id:"jangsu-spring", type:"trail", fcfs:true, name:"장수트레일레이스 Spring · 38K", date:"2027-01-02", state:"est", whenText:"1월 초 14:00 예상",
   method:"선착순(조기 마감 가능). 결제해야 접수 확정. 해마다 추첨과 선착순이 바뀜", cap:"미확인 (2025 가을 38K-P 800명)", speed:null,
   need:"38K-P: 만 18세 이상, 기록 요건 없음. 참가비 15만 원. 필수장비 불시 점검, 컵 개인 지참",
-  links:[["접수","https://rocknrun.kr/JTR-Registration"],["홈페이지","https://rocknrun.kr"],["인스타 @rocknrun.kr","https://www.instagram.com/rocknrun.kr/"]],
+  links:[["공식 접수", "https://rocknrun.kr/JTR-Registration"], ["홈페이지", "https://rocknrun.kr"], ["인스타 @jangsutrailrace", "https://www.instagram.com/jangsutrailrace/"]],
   note:"지난번: 2026.01.02 14:00 오픈 (대회 4.3~5)"},
  {id:"k50-cc", type:"trail", fcfs:true, name:"코리아50K 춘천 (CC)", date:"2027-02-10", state:"est", whenText:"2월 중순 12:00 예상",
   method:"선착순. 종목별로 하루씩 나눠 오픈", cap:"미확인", speed:null,
   need:"CC50 / CC20 스카이레이스 / CC15. U23 할인은 증빙 필요",
-  links:[["홈페이지","https://korea50k.com"],["접수","https://jsceno-register.imweb.me"],["인스타 @korea50k","https://www.instagram.com/korea50k/"]],
+  links:[["공식 접수", "https://jsceno-register.imweb.me"], ["홈페이지", "https://korea50k.com"], ["인스타 @korea50k", "https://www.instagram.com/korea50k/"]],
   note:"지난번: CC50 2026.02.11 12:00, CC20 02.12, CC15 02.13 (대회 6월)"},
  {id:"tnf100", type:"trail", fcfs:true, name:"TNF 100 코리아 (대관령 → 강릉)", date:"2027-02-26", state:"est", whenText:"2월 말 10:00 예상",
   method:"선착순(노스페이스 공식몰) + 추가 추첨(노스페이스 아웃도어 인스타 링크)", cap:"100K 400 · 50K 600 · 22K 200 · 10K 1,000", speed:"100K·50K·22K 약 1분 매진",
   need:"50K·100K는 전날 선수 등록과 장비 검사 필수. 참가비 50K 17만 원",
-  links:[["2026 접수 기사","https://sports.khan.co.kr/article/202602250008003"]], note:"지난번: 2026.02.27 10:00 (대회 5.16~17). 추가 추첨 3.6 응모"},
+  links:[["공식 접수", "https://www.thenorthfacekorea.co.kr/tnf100/signup"], ["홈페이지", "https://www.thenorthfacekorea.co.kr/tnf100"], ["인스타 @thenorthface_kr", "https://www.instagram.com/thenorthface_kr/"]], note:"지난번: 2026.02.27 10:00 (대회 5.16~17). 추가 추첨 3.6 응모"},
  {id:"transjeju", type:"trail", fcfs:true, name:"트랜스제주 by UTMB (추천)", date:"2027-03-18", state:"est", whenText:"3월 중순 17:00 예상",
   method:"선착순, UTMB 사이트, 환불 불가. 20K 우선접수 후 일반접수", cap:"전 종목 매진(2026)", speed:null,
   need:"UTMB 인덱스 필요(100K는 50K 인덱스, 60K는 20K 인덱스). 러닝스톤 적립 대회",
-  links:[["대회 사이트","https://transjeju.utmb.world/"],["접수 안내","https://transjeju.utmb.world/races-runners/runners/Registration"]],
+  links:[["공식 접수", "https://transjeju.utmb.world/races-runners/runners/Registration"], ["홈페이지", "https://transjeju.utmb.world/"], ["인스타 @transjeju_by_utmb", "https://www.instagram.com/transjeju_by_utmb/"]],
   note:"지난번: 20K 2026.03.18 17:00, 일반 03.20 17:00 (대회 10.2~4)"},
  {id:"jtbc", type:"road", fcfs:false, name:"JTBC 서울마라톤", date:"2027-04-12", state:"est", whenText:"4월 중순 래플 예상",
   method:"추첨(러너블 계단식 래플). 기록 구간별로 뽑고, 떨어지면 다음 회차로 넘어감. 발표 직후 결제", cap:"약 32,000명 (본접수 풀 1만 · 10K 1만)", speed:null,
   need:"카카오 러너스카드 필수(러너블에서 발급). 서브3, 서브4 등 기록이 있으면 앞 회차에서 추첨됨. 1인 여러 번 응모하면 마지막 응모만 인정",
-  links:[["러너블","https://runable.me/competition"],["공지사항","http://marathon.jtbc.com/17"],["인스타 @jtbc_seoul_marathon","https://www.instagram.com/jtbc_seoul_marathon/"]],
+  links:[["공식 접수(러너블)", "https://runable.me/competition"], ["홈페이지", "http://marathon.jtbc.com"], ["인스타 @jtbc_seoul_marathon", "https://www.instagram.com/jtbc_seoul_marathon/"]],
   note:"지난번 응모: 2026.04.13 14:00~04.15 16:00, 발표 04.17 13:00. 2027 개최 방식은 미공지"},
  {id:"dongma-member", type:"road", fcfs:true, name:"동마클럽 2027 멤버십 (런저니)", date:"2027-01-28", state:"est", whenText:"1월 말 14:00 예상",
   method:"선착순 4,000명(2026). 서울마라톤 신청자만 가입 가능. 연회비 15만 원", cap:"4,000명 (2026)", speed:"2026 상품 SOLD OUT",
   need:"공주백제·경주국제 참가권 + 다음 해 서울마라톤 우선 신청권 + 런저니 메달 + 멤버십 존. 참가권이 있어도 대회별 신청은 따로 해야 함",
-  links:[["동마클럽","https://dongma.club"],["2026 멤버십 상품","https://dongma.club/product/2026-%EB%8F%99%EC%95%84%EB%A7%88%EB%9D%BC%ED%86%A4-%EB%A9%A4%EB%B2%84%EC%8B%AD/1034/"],["런저니 안내","https://seoul-marathon.com/89"]],
+  links:[["공식 접수(동마클럽)", "https://dongma.club"], ["런저니 안내", "https://seoul-marathon.com/89"], ["인스타 @dongmaclub", "https://www.instagram.com/dongmaclub/"]],
   note:"지난번: 2026.01.29(목) 14:00 오픈"},
  {id:"gongju", type:"road", fcfs:true, name:"공주백제마라톤 2027 (런저니)", date:"2027-05-24", state:"est", whenText:"5월 말 19:00 예상",
   method:"멤버십 우선접수 → 약 1주 뒤 일반 본접수(선착순). 동마클럽에서 신청", cap:"미확인", speed:null,
   need:"풀 / 32K / 하프 / 10K / 5K. 런저니는 10km 이상 완주. 대회 9월 셋째 주 일요일(2026: 9.20)",
-  links:[["동마클럽","https://dongma.club"],["접수 정리","https://runningwikii.com/entry/gongju-baekje-marathon-registration-schedule-guide/"]],
+  links:[["공식 접수", "https://gongjumarathon.com/registrations"], ["홈페이지", "https://gongjumarathon.com"], ["인스타 @gongju_marathon", "https://www.instagram.com/gongju_marathon/"]],
   note:"2025 기준: 멤버십 우선 5.26 19:00, 일반 6.03 19:00. 2027 대회일 9.19 예상"},
  {id:"gyeongju-intl", type:"road", fcfs:true, name:"경주국제마라톤 2027 (런저니)", date:"2027-05-25", state:"est", whenText:"5월 말 19:00 예상",
   method:"멤버십 우선접수 후 일반 접수", cap:"마스터스 약 2만 명(2026)", speed:null,
   need:"풀 / 하프 / 10K. WA 엘리트라벨. 런저니 메달은 경주 완주 후 수여. 대회 10월 중순 토요일(2026: 10.17)",
-  links:[["참가 신청","https://www.gyeongjumarathon.com/50"],["홈페이지","https://www.gyeongjumarathon.com/home"]],
+  links:[["공식 접수", "https://www.gyeongjumarathon.com/50"], ["홈페이지", "https://www.gyeongjumarathon.com/home"], ["인스타 미확인", null]],
   note:"지난번 접수: 2026.05.26 19:00. 2027 대회일 10.16 예상"},
  {id:"seoul", type:"road", fcfs:true, name:"서울마라톤 (동아마라톤) 2028", date:"2027-04-27", state:"est", whenText:"4월 말 기록 제출 → 6월 초 본접수",
   method:"풀코스는 그룹별 선착순(A~H, 19:00~22:00). 기록이 좋을수록 앞 그룹. 접수할 때 바로 결제", cap:"2026 대회 기준 풀 20,000 · 10K 20,000", speed:"2027 대회 전 종목 매진 (2026.6.4 공지)",
   need:"풀코스: 공인 풀 기록 4:59:59 이내, 런카이브에 기록 제출(임시 기록증 불가). 기록이 없으면 마지막 그룹만 가능",
-  links:[["공지사항","https://seoul-marathon.com/94"],["접수(동마클럽)","https://dongma.club"],["기록 제출(런카이브)","https://runarchive.com"],["인스타 @seoul_marathon","https://www.instagram.com/seoul_marathon/"]],
+  links:[["공식 접수(동마클럽)", "https://dongma.club"], ["홈페이지", "https://seoul-marathon.com/94"], ["인스타 @seoul_marathon", "https://www.instagram.com/seoul_marathon/"]],
   note:"2027 대회(3.21)는 접수 끝남. 지난번: 기록 제출 2026.04.28~05.11, 본접수 06.01~02"},
  {id:"godg", type:"trail", fcfs:true, name:"Go대관령 국제트레일런", date:"2027-06-05", state:"est", whenText:"6월 초 예상",
   method:"자체 홈페이지 접수(약 한 달간)", cap:"약 1,500명 (2025)", speed:null,
   need:"10K / 20.18K / 44K. 2025 참가비 44K 10만 원",
-  links:[["접수","https://daegwallyeongrun.com/apply"],["홈페이지","https://daegwallyeongrun.com"]], note:"대회 8월 말(2026: 8.30). 2025 접수 06.05~07.05"},
+  links:[["공식 접수", "https://order.doortoout.com/5/35/40"], ["홈페이지", "https://daegwallyeongrun.com"], ["인스타 미확인", null]], note:"대회 8월 말(2026: 8.30). 2025 접수 06.05~07.05"},
  {id:"jangsu-fall", type:"trail", fcfs:true, name:"장수트레일레이스 Fall · 38K", date:"2027-06-09", state:"est", whenText:"6월 초 예상",
   method:"2026: 선착순, 종목별 오픈 시각 별도 공지 / 2025: 사전접수 후 추첨", cap:"미확인", speed:null,
   need:"38P 자격 요건 없음(만 18세 이상). 100K 이상은 ITRA 포인트나 UTMB 인덱스 증빙",
-  links:[["접수 안내","https://rocknrun.kr/2026_JTR_Fall_Registration"],["인스타 @rocknrun.kr","https://www.instagram.com/rocknrun.kr/"]], note:"지난번: 2026.06.10 오픈 (대회 9.18~20)"},
+  links:[["공식 접수", "https://rocknrun.kr/2026_JTR_Fall_Registration"], ["홈페이지", "https://rocknrun.kr"], ["인스타 @jangsutrailrace", "https://www.instagram.com/jangsutrailrace/"]], note:"지난번: 2026.06.10 오픈 (대회 9.18~20)"},
  {id:"chuncheon", type:"road", fcfs:true, name:"춘천마라톤 (조선일보)", date:"2027-07-13", state:"est", whenText:"7월 중순 14:00 예상",
   method:"선착순. 신청과 결제가 분리돼 있고 결제 기간을 놓치면 삭제. 9월에 미결제분 추가 접수", cap:"약 2만 명 (2025: 풀 11,193 · 10K 9,442)", speed:"풀 약 4분 · 10K 약 10분 마감",
   need:"풀 만 18세 이상. 6월에 조선멤버십 얼리버드와 5~8회 완주자 추첨이 먼저 열림. 「비정상적인 경로로 신청하면 참가 취소」 규정",
-  links:[["접수","https://www.chuncheonmarathon.com/apply/part-application.html"],["공지 게시판","https://board.chosun.com/nbrd/bbs/list.html?b_bbs_id=10005&branch=&pn=1"]],
+  links:[["공식 접수", "https://www.chuncheonmarathon.com/apply/part-application.html"], ["홈페이지", "https://www.chuncheonmarathon.com"], ["인스타 @chuncheon_marathon", "https://www.instagram.com/chuncheon_marathon/"]],
   note:"지난번: 풀 2026.07.14 14:00, 10K 07.16 14:00 (대회 10.25)"},
  {id:"daegu-next", type:"road", fcfs:true, name:"대구마라톤 2028", date:"2027-10-11", state:"est", whenText:"10월 중순 10:00 예상",
   method:"선착순. 신청과 결제 분리", cap:"풀 15,000 (2027 대회)", speed:"2년 연속 접수 첫날 서버 마비",
   need:"대구마라톤 회원(카카오·네이버 로그인 가능). 같은 아이디로 동시 로그인하면 이전 기기가 로그아웃됨",
-  links:[["접수","https://daegumarathon.daegu.go.kr/korAply/index.do"],["공지사항","https://daegumarathon.daegu.go.kr/kor/index.do?menu_id=00001824"],["인스타 @daegu_marathon","https://www.instagram.com/daegu_marathon/"]],
+  links:[["공식 접수", "https://daegumarathon.daegu.go.kr/korAply/index.do"], ["홈페이지", "https://daegumarathon.daegu.go.kr/"], ["인스타 @daegu_marathon", "https://www.instagram.com/daegu_marathon/"]],
   note:"2027 대회: 풀 2026.10.12 10:00 오픈, 10K·5K 10.26 10:00"},
  {id:"halla100", type:"trail", fcfs:false, name:"한라산 100 트레일런 (추천)", date:"2027-03-23", state:"est", whenText:"3월 하순 예상",
   method:"공식 홈페이지 접수(약 한 달). 선착순·추첨 미확인", cap:"미확인", speed:null,
   need:"100M / 100K / 50K / 36K / 10K. 대회 6월 초(2026: 6.6)",
-  links:[["신청","https://ktra.kr/58"],["홈페이지","http://ktra.kr/"]], note:"지난번: 2026.03.24~04.30"},
+  links:[["공식 접수", "https://ktra.kr/58"], ["홈페이지", "https://ktra.kr"], ["인스타 @ktra.kr", "https://www.instagram.com/ktra.kr/"]], note:"지난번: 2026.03.24~04.30"},
  {id:"seoul100k", type:"trail", fcfs:true, name:"서울100K (추천)", date:"2027-06-01", state:"est", whenText:"6월 초 예상",
-  method:"사전접수 후 다음 날 일반접수 선착순(inthetrail.com)", cap:"100K 500 · 50K 500 · 20K 1,700", speed:null,
+  method:"사전접수 후 다음 날 일반접수 선착순. 접수 조회는 동마클럽", cap:"100K 500 · 50K 500 · 20K 1,700", speed:null,
   need:"서울 도심 산을 잇는 울트라. 대회 9월(2026: 9.19~20)",
-  links:[["홈페이지","https://www.seoul100k.com"]], note:"지난번: 사전 2026.06.01 14:00, 일반 06.02 10:00"},
+  links:[["공식 접수", "https://www.seoul100k.com/52"], ["홈페이지", "https://www.seoul100k.com"], ["인스타 @seoul100k", "https://www.instagram.com/seoul100k/"]], note:"지난번: 사전 2026.06.01 14:00, 일반 06.02 10:00"},
  {id:"sonkeechung", type:"road", fcfs:true, name:"손기정평화마라톤 (추천)", date:"2027-08-09", state:"est", whenText:"8월 예상",
   method:"선착순, 빠르게 마감", cap:"약 2만 명", speed:null,
   need:"풀 / 하프 / 10K. 11월 시즌 마무리용(2026: 11.15)",
-  links:[["홈페이지","https://sonkeechungrun.com"]], note:"지난번: 2026.08.09~09.14"},
+  links:[["공식 접수", "https://sonkeechungrun.com/entryperson"], ["홈페이지", "https://sonkeechungrun.com"], ["인스타 미확인", null]], note:"지난번: 2026.08.09~09.14"},
  {id:"gyeongju", year:2027, type:"road", fcfs:true, name:"경주벚꽃마라톤 (추천)", date:null, state:"est", whenText:"접수 시기 미확인",
   method:"선착순", cap:"15,000명", speed:"오픈 1분 만에 마감",
-  need:"대회 4월 초", links:[["대회 일정 정리","https://runningwikii.com/entry/2026-major-marathon-calendar/"]], note:"공지 감시 목록에 넣어 두고 접수 시기가 나오면 갱신"}
+  need:"대회 4월 초", links:[["공식 접수", "https://cherrymarathon.co.kr/apply/index01.php"], ["홈페이지", "https://cherrymarathon.co.kr"], ["인스타 @gj_cherry_marathon", "https://www.instagram.com/gj_cherry_marathon/"]], note:"공지 감시 목록에 넣어 두고 접수 시기가 나오면 갱신"}
 ];
 const SOURCES = [
  ["대구MBC · 2026 대구마라톤 홈페이지 중단","https://dgmbc.com/article/jrlG2f5naxrNQW0"],
@@ -500,15 +501,15 @@ const SOURCES = [
 ];
 const CLOSED = [
  ["대구마라톤 2027 · 풀코스","2026.10.12 10:00 ~ 10.18","선착순","첫날 서버 장애·대기열 수천 명","https://daegumarathon.daegu.go.kr/korAply/index.do"],
- ["손기정평화마라톤 2026","2026.08.09 ~ 09.14","선착순","약 2만 명 빠르게 마감","https://sonkeechungrun.com"],
+ ["손기정평화마라톤 2026","2026.08.09 ~ 09.14","선착순","약 2만 명 빠르게 마감","https://sonkeechungrun.com/entryperson"],
  ["춘천마라톤 2026 · 풀","2026.07.14 14:00","선착순","약 4분 마감 (10K 약 10분)","https://www.chuncheonmarathon.com/apply/part-application.html"],
  ["장수트레일레이스 Fall 2026","2026.06.10","선착순","종목별 오픈 시각 별도","https://rocknrun.kr/2026_JTR_Fall_Registration"],
- ["서울100K 2026","2026.06.01 사전 · 06.02 10:00 일반","선착순","—","https://www.seoul100k.com"],
+ ["서울100K 2026","2026.06.01 사전 · 06.02 10:00 일반","선착순","—","https://www.seoul100k.com/52"],
  ["서울마라톤(동아) 2027","2026.06.01~02 그룹별 19:00~22:00","선착순","6.4 전 종목 매진","https://dongma.club"],
  ["경주국제마라톤 2026","2026.05.26 19:00","선착순","—","https://www.gyeongjumarathon.com/50"],
  ["JTBC 서울마라톤 2026","2026.04.13 14:00 ~ 04.15 16:00","추첨(래플)","4.17 발표 후 결제","https://runable.me/competition"],
  ["트랜스제주 by UTMB 2026","2026.03.18 17:00 · 03.20 17:00","선착순","전 종목 마감","https://transjeju.utmb.world/"],
- ["TNF 100 코리아 2026","2026.02.27 10:00","선착순 + 추가 추첨","100K·50K·22K 약 1분 매진","https://sports.khan.co.kr/article/202602250008003"],
+ ["TNF 100 코리아 2026","2026.02.27 10:00","선착순 + 추가 추첨","100K·50K·22K 약 1분 매진","https://www.thenorthfacekorea.co.kr/tnf100/signup"],
  ["코리아50K 춘천 2026","2026.02.11 12:00 (CC50)","선착순","—","https://korea50k.com"],
  ["장수트레일레이스 Spring 2026","2026.01.02 14:00","선착순","—","https://rocknrun.kr/JTR-Registration"]
 ]
@@ -529,7 +530,7 @@ function renderEntries(){
   const ids=Object.keys(ENT).filter(id=>findRace(id));
   $("#entries").innerHTML=ids.length?ids.map(id=>{const r=findRace(id), e=ENT[id]; return `<div class="ent">
     <span class="chk" aria-hidden="true">✓</span>
-    <div style="min-width:0"><b>${esc(r.name)}</b><div class="meta"><span>${r.type==="trail"?"Trail":"Road"}</span><span>접수 일정 ${esc(r.when)}</span><span>완료 표시 ${esc(e.at||"")}</span>${r.links[0]?`<a href="${esc(r.links[0][1])}" target="_blank" rel="noopener">${esc(r.links[0][0])} ↗</a>`:""}</div>
+    <div style="min-width:0"><b>${esc(r.name)}</b><div class="meta"><span>${r.type==="trail"?"Trail":"Road"}</span><span>접수 일정 ${esc(r.when)}</span><span>완료 표시 ${esc(e.at||"")}</span>${r.links[0]&&r.links[0][1]?`<a href="${esc(r.links[0][1])}" target="_blank" rel="noopener">${esc(r.links[0][0])} ↗</a>`:""}</div>
     <input class="memo" data-memo="${esc(id)}" value="${esc(e.memo||"")}" placeholder="메모: 대회일, 배번, 종목, 결제 마감일 등" aria-label="${esc(r.name)} 메모"></div>
     <div class="side"><button type="button" class="tog" data-paid="${esc(id)}" aria-pressed="${e.paid?'true':'false'}">${e.paid?"결제 완료":"결제 전"}</button><button type="button" class="rm" data-unent="${esc(id)}">목록에서 빼기</button></div>
   </div>`}).join(""):`<div class="ent-empty kr">아직 접수 완료한 대회가 없어요. 아래 대회 카드의 「접수 완료」 버튼을 눌러 보세요.</div>`;
@@ -580,7 +581,7 @@ function card(r){const n=dday(r.date);return `<article class="win ${r.type}${isM
       <div><dt>준비·자격</dt><dd>${esc(r.need)}</dd></div>
       ${r.note?`<div><dt>메모</dt><dd class="muted">${esc(r.note)}</dd></div>`:""}
     </dl>
-    <div class="acts">${r.links.map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)} ↗</a>`).join("")}<button type="button" class="donebtn" data-ent="${esc(r.id)}" aria-pressed="${ENT[r.id]?'true':'false'}">${ENT[r.id]?"✓ 접수 완료":"접수 완료"}</button></div>
+    <div class="acts">${r.links.map(([l,u])=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)} ↗</a>`:`<span class="na">${esc(l)}</span>`).join("")}<button type="button" class="donebtn" data-ent="${esc(r.id)}" aria-pressed="${ENT[r.id]?'true':'false'}">${ENT[r.id]?"✓ 접수 완료":"접수 완료"}</button></div>
   </article>`}
 function renderRaces(){
   const t=q.trim().toLowerCase();
