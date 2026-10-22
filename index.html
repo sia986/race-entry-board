@@ -9,6 +9,14 @@
 <meta property="og:description" content="마라톤·트레일 접수 시기와 신청 링크, 마감 속도, 빠른 신청 키트">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#ececea">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="접수보드">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta property="og:url" content="https://sia986.github.io/race-entry-board/">
+<meta property="og:image" content="https://sia986.github.io/race-entry-board/icon-512.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M6 14a5 5 0 0 1 5-5h14l6 6h22a5 5 0 0 1 5 5v4H6z' fill='%232f8fe0'/%3E%3Crect x='6' y='20' width='52' height='35' rx='5' fill='%2363c4f5'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,6 +34,7 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
 body{margin:0;background-color:var(--paper);color:var(--ink);font-family:var(--f-lat),var(--f-kr);font-size:15px;line-height:1.55;
@@ -77,6 +86,15 @@ button{font:inherit;color:inherit}
 .cal .d{display:block;font-size:16px;font-weight:700;line-height:24px;font-variant-numeric:tabular-nums}
 .chip{display:inline-block;font-size:10px;font-weight:600;background:var(--card-2);border-radius:3px;padding:0 5px;color:var(--sub)}
 
+.appbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:22px}
+.appbtn{border:1.5px solid var(--ink);background:#fff;color:var(--ink);border-radius:999px;padding:9px 18px;font-size:14px;font-weight:700;cursor:pointer}
+.appbtn.primary{background:var(--ink);color:#fff}
+.sheet{position:fixed;inset:0;z-index:30;background:rgba(17,18,20,.35);display:grid;align-items:end;justify-items:center;padding:16px}
+.sheet .box{background:#fff;border-radius:16px;max-width:420px;width:100%;padding:18px 20px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 20px 50px -20px rgba(0,0,0,.4);display:grid;gap:10px}
+.sheet h3{font-size:17px;letter-spacing:-.02em}
+.sheet ol{margin:0;padding-left:20px;display:grid;gap:6px;font-size:14px}
+.sheet .close{justify-self:end;border:0;background:var(--card-2);border-radius:999px;padding:8px 16px;font-weight:600;cursor:pointer}
+@media (display-mode: standalone){ #installBtn{display:none!important} }
 /* ---------- Section headers ---------- */
 .sec{display:grid;gap:22px;scroll-margin-top:24px}
 .sec-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
@@ -260,6 +278,11 @@ button{font:inherit;color:inherit}
   <div class="h-title">
     <div class="eyb">2026–27 season</div>
     <h1>race entry<br><span class="kr">접수 보드</span></h1>
+    <div class="appbar kr">
+      <button type="button" class="appbtn primary" id="installBtn" hidden>앱으로 설치</button>
+      <button type="button" class="appbtn" id="shareBtn">링크 공유</button>
+      <span class="muted" id="shareMsg" aria-live="polite"></span>
+    </div>
   </div>
   <div class="h-folder" aria-hidden="true"><div class="folder"><i></i></div></div>
   <div class="h-card"><div class="mini" id="heroCard"></div></div>
@@ -363,6 +386,14 @@ button{font:inherit;color:inherit}
   <div class="src kr" id="src"></div>
   <p class="foot-note kr">정보는 2026년 10월 21일 기준이에요. 대회 주최 측 공지에 따라 바뀔 수 있어요.</p>
 </section>
+</div>
+
+<div class="sheet kr" id="iosSheet" hidden role="dialog" aria-modal="true" aria-labelledby="iosTitle">
+  <div class="box">
+    <h3 id="iosTitle">홈 화면에 앱으로 추가하기</h3>
+    <ol id="iosSteps"></ol>
+    <button type="button" class="close" id="iosClose">확인</button>
+  </div>
 </div>
 
 <nav class="dock" aria-label="섹션 이동">
@@ -671,6 +702,35 @@ const ERR=[
  ["잠시 후 다시 이용해 주세요","반복 요청을 잠깐 막은 거예요. 5분 쉬고 한 번만 누르세요. 연타하면 더 오래 막혀요."]
 ];
 $("#chat").innerHTML=ERR.map(([a,b])=>`<div class="pair"><div class="bub err">${esc(a)}</div><div class="bub fix"><small>할 일</small>${esc(b)}</div></div>`).join("");
+
+/* app install + share */
+(function(){
+  const SITE="https://sia986.github.io/race-entry-board/";
+  const ua=navigator.userAgent, isIOS=/iPhone|iPad|iPod/i.test(ua), isAndroid=/Android/i.test(ua);
+  const standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+  const btn=$("#installBtn"), sheet=$("#iosSheet");
+  let deferred=null;
+  if("serviceWorker" in navigator && location.protocol==="https:" && /github\.io$/.test(location.hostname)){
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  }
+  window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); deferred=e; if(!standalone) btn.hidden=false; });
+  window.addEventListener("appinstalled",()=>{ btn.hidden=true; $("#shareMsg").textContent="설치됐어요. 홈 화면에서 열어 보세요."; });
+  if(!standalone && (isIOS||isAndroid)) btn.hidden=false;
+  function steps(list){ $("#iosSteps").innerHTML=list.map(x=>`<li>${x}</li>`).join(""); sheet.hidden=false; }
+  btn.addEventListener("click",async()=>{
+    if(deferred){ deferred.prompt(); await deferred.userChoice.catch(()=>{}); deferred=null; return; }
+    if(isIOS) steps(["사파리에서 이 페이지를 여세요 (카카오톡 등 앱 안에서 열렸다면 오른쪽 아래 메뉴 → 「Safari로 열기」).","아래쪽 가운데 공유 버튼(네모에 위쪽 화살표)을 누르세요.","「홈 화면에 추가」를 누르고 오른쪽 위 「추가」를 누르세요."]);
+    else steps(["크롬에서 이 페이지를 여세요 (카카오톡 등 앱 안에서 열렸다면 메뉴 → 「다른 브라우저로 열기」).","오른쪽 위 ⋮ 메뉴를 누르세요.","「홈 화면에 추가」 또는 「앱 설치」를 누르세요."]);
+  });
+  $("#iosClose").addEventListener("click",()=>{ sheet.hidden=true; });
+  sheet.addEventListener("click",e=>{ if(e.target===sheet) sheet.hidden=true; });
+  $("#shareBtn").addEventListener("click",async()=>{
+    const data={title:"레이스 접수 보드",text:"메이저 마라톤·트레일 대회 접수 일정과 D-day를 한눈에",url:SITE};
+    try{ if(navigator.share){ await navigator.share(data); return; } }catch(err){ if(err&&err.name==="AbortError") return; }
+    try{ await navigator.clipboard.writeText(SITE); $("#shareMsg").textContent="링크를 복사했어요."; }
+    catch(err){ $("#shareMsg").textContent=SITE; }
+  });
+})();
 
 /* sources */
 $("#src").innerHTML=SOURCES.map(([t,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join("");

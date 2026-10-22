@@ -1,0 +1,17 @@
+{
+  "name": "레이스 접수 보드",
+  "short_name": "접수보드",
+  "description": "국내 메이저 마라톤·트레일 대회 접수 시기, 공식 신청 링크, 접수 D-day",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ececea",
+  "theme_color": "#ececea",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
